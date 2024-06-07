@@ -1,10 +1,19 @@
-import { useState } from "react";
+import React from "react";
+import LoginSignup from "./components/LoginSignup/LoginSignup";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const isLoggedUser = true;
 
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <div id="startBackground" className="flex">
+      <div className="mx-auto my-20">
+        <span className="text-3xl">KorusAppStore</span>
+        <br />
+        <LoginSignup mode="login" loggind={isLoggedUser} />
+      </div>
+    </div>
+  );
 }
 
 export default App;
