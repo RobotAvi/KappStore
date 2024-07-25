@@ -1,8 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from models import User
 from database import SessionLocal
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8001"],  # Замените на URL вашего фронтенда
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Пример базы данных пользователей (можно заменить на настоящую базу данных)
 users_db = []
