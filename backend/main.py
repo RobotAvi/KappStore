@@ -34,4 +34,4 @@ async def register_user(user: User):
 
 @app.get("/hello")
 async def return_hello():
-    return {"message": "Hello"}
+    return {"message": "Hello, Dear User"}
