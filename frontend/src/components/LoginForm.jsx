@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Components from "./Components";
@@ -27,17 +28,38 @@ export default function LoginForm() {
     return true;
   };
 
-  const handleSubmitSignUp = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
-    //navigate("/homepage");
-  };
+    let api_url = "http://localhost:8000/";
+    let data = {};
+    if (signIn) {
+      api_url += "login";
 
-  const handleSubmitSignIn = async (event) => {
-    event.preventDefault();
-    if (!validateForm()) return;
-
-    //navigate("/homepage");
+      const formDetails = new URLSearchParams();
+      formDetails.append("email", email);
+      formDetails.append("password", password);
+      data = {
+        email: email,
+        password: password,
+      };
+    } else {
+      api_url += "register";
+      const formDetails = new URLSearchParams();
+      formDetails.append("username", username);
+      formDetails.append("email", email);
+      formDetails.append("password", password);
+      data = {
+        username: username,
+        email: email,
+        password: password,
+      };
+    }
+    let response = await axios.post(api_url, data).then((response) => response);
+    console.log(response);
+    if (response.data.value) {
+      navigate("/homepage");
+    }
   };
 
   const signInAction = () => {
@@ -52,7 +74,7 @@ export default function LoginForm() {
   return (
     <Components.Container>
       <Components.SignUpContainer signingIn={signIn}>
-        <Components.Form onSubmit={handleSubmitSignUp}>
+        <Components.Form onSubmit={handleSubmit}>
           <Components.Title>Create Account</Components.Title>
           <Components.Input
             type="text"
@@ -74,7 +96,7 @@ export default function LoginForm() {
         </Components.Form>
       </Components.SignUpContainer>
       <Components.SignInContainer signingIn={signIn}>
-        <Components.Form onSubmit={handleSubmitSignIn}>
+        <Components.Form onSubmit={handleSubmit}>
           <Components.Title>Sign in</Components.Title>
           <Components.Input
             type="email"
@@ -87,14 +109,7 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Components.Anchor href="#">Forgot your password?</Components.Anchor>
-          <Components.Button
-            type="submit"
-            onClick={() => {
-              console.log("Click SIGN IN");
-            }}
-          >
-            Sign In
-          </Components.Button>
+          <Components.Button type="submit">Sign In</Components.Button>
           {error && <p style={{ color: "red" }}> {error} </p>}
         </Components.Form>
       </Components.SignInContainer>
