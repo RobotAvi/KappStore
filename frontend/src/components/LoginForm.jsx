@@ -12,6 +12,14 @@ export default function LoginForm() {
 
   const navigate = useNavigate();
 
+
+  // const test_get_response = async () => {
+  //   let test_response = await axios.get("http://127.0.0.1:8000/hello/").then((response) => response);
+  //   if (test_response.status.ok) {
+  //     console.log(test_response);
+  //   }
+  // }
+  // test_get_response();
   const validateForm = () => {
     if (signIn) {
       if (!email || !password) {
@@ -55,11 +63,13 @@ export default function LoginForm() {
         password: password,
       };
     }
-    let response = await axios.post(api_url, data).then((response) => response);
-    console.log(response);
-    if (response.data.value) {
-      navigate("/homepage");
-    }
+    await axios.post(api_url, data)
+      .then((response) => console.log(response))
+      .catch((error) => {
+        console.log(error.response);
+        setError(error.response.data.detail)
+    });
+    //navigate("/homepage");
   };
 
   const signInAction = () => {
