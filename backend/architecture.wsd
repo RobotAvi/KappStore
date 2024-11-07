@@ -1,0 +1,36 @@
+@startuml KorusApp
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Пользователь системы")
+
+System_Boundary(backend, "Backend System") {
+    Container(api_gateway, "API Gateway", "Spring Cloud Gateway", "Единая точка входа, маршрутизация, аутентификация")
+    
+    Container(auth_service, "Auth Service", "Spring Boot", "Управление пользователями и аутентификацией")
+    
+    Container(journey_service, "Journey Service", "Spring Boot", "Управление путешествиями, идеями и заказами")
+    
+    Container(comment_service, "Comment Service", "Spring Boot", "Управление комментариями")
+    
+    Container(rating_service, "Rating Service", "Spring Boot", "Управление рейтингами")
+}
+
+System_Ext(frontend, "Frontend Application", "React", "Пользовательский интерфейс")
+
+ContainerDb(db, "Database", "PostgreSQL", "Схема KappStore:\n- Users\n- Journeys\n- Comments")
+
+Rel(user, frontend, "Использует", "HTTPS")
+Rel(frontend, api_gateway, "Отправляет запросы", "JSON/HTTPS")
+
+Rel(api_gateway, auth_service, "Маршрутизирует запросы", "JSON/HTTPS")
+Rel(api_gateway, journey_service, "Маршрутизирует запросы", "JSON/HTTPS")
+Rel(api_gateway, comment_service, "Маршрутизирует запросы", "JSON/HTTPS")
+Rel(api_gateway, rating_service, "Маршрутизирует запросы", "JSON/HTTPS")
+
+Rel(auth_service, db, "Читает/Пишет", "JDBC")
+Rel(journey_service, db, "Читает/Пишет", "JDBC")
+Rel(comment_service, db, "Читает/Пишет", "JDBC")
+Rel(rating_service, db, "Читает/Пишет", "JDBC")
+
+LAYOUT_WITH_LEGEND()
+@enduml
